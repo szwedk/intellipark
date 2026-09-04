@@ -1,33 +1,25 @@
 {
-  "name": "intellipark_intellij",
-  "version": "0.1.0",
+  "name": "intellipark",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "bridge": "node tools/serial-bridge.mjs"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.34.0",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.3",
-    "@tailwindcss/typography": "^0.5.9",
-    "csv-parser": "^3.0.0",
-    "eslint": "8.35.0",
-    "eslint-config-next": "13.2.3",
-    "firebase": "^9.20.0",
-    "next": "^13.3.1",
-    "postcss-preset-env": "^8.0.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-firebase-hooks": "^5.1.1",
-    "react-google-button": "^0.7.2",
-    "xlsx": "^0.18.5"
+    "firebase": "^12.18.0",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-google-button": "^0.8.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.7"
+    "@tailwindcss/postcss": "^4.3.3",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.3.4",
+    "tailwindcss": "^4.3.3"
   }
 }

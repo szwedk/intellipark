@@ -1,53 +1,52 @@
-import 'tailwindcss/tailwind.css';
-import withAuth from '../withAuth'; // Import the withAuth HOC
-import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import withAuth from '../withAuth';
+import useSpot from '../hooks/useSpot';
 
-function CarPark() {
-  const [color, setColor] = useState('green');
+// Only 1A has a sensor on it. The rest of the lot is mapped out but not wired,
+// so they are shown as unknown rather than pretending they are free.
+const SPOTS = ['1A', '1B', '2A', '2B', '3A', '3B'];
+const MONITORED = '1A';
 
-  useEffect(() => {
-    const fetchColor = async () => {
-      try {
-        const response = await fetch('/api/color');
-        const data = await response.json();
-        setColor(data.color);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+function SpotRow({ id, occupied, monitored }) {
+    const colour = !monitored ? 'bg-gray-500' : occupied ? 'bg-red-600' : 'bg-green-600';
 
-    fetchColor();
-    const interval = setInterval(fetchColor, 1000); // Fetch the color every second
-
-    return () => {
-      clearInterval(interval); // Clean up the interval when the component unmounts
-    };
-  }, []);
-
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="relative w-96 bg-opacity-30 bg-gray-100 p-12 rounded-xl transition-all duration-500 mx-auto">
-        <div className="mx-auto max-w-sm p-20">
-          <ul className="mr-20">
-            {['1A', '1B', '2A', '2B', '3A', '3B'].map((id) => (
-              <li key={id} className="flex justify-center">
-                <div className="relative p-4 w-1/2">
-                  <label
-                    className={`block w-full text-center font-bold text-sm leading-6 px-4 py-2 rounded-md transition-colors duration-300 ease-in-out 
-                    ${
-                      id === '1A' && color === 'red' ? 'bg-red-600' : 'bg-green-600'
-                    }`}
-                  >
-                    {id}
-                  </label>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
+    return (
+        <li className="flex justify-center p-4">
+            <span
+                className={`w-40 text-center font-bold text-sm py-2 rounded-md text-white transition-colors duration-300 ${colour}`}
+            >
+                {id}
+                {!monitored && <span className="font-normal"> · no sensor</span>}
+            </span>
+        </li>
+    );
 }
 
-export default withAuth(CarPark); // Wrap the CarPark component with the withAuth HOC
+function ShowSpots() {
+    const { occupied } = useSpot();
+
+    return (
+        <>
+            <Head>
+                <title>Spots</title>
+            </Head>
+
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="bg-gray-100/30 p-12 rounded-xl">
+                    <ul>
+                        {SPOTS.map((id) => (
+                            <SpotRow
+                                key={id}
+                                id={id}
+                                occupied={occupied}
+                                monitored={id === MONITORED}
+                            />
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default withAuth(ShowSpots);

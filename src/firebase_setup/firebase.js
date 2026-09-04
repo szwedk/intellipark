@@ -1,25 +1,29 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import 'firebase/compat/storage';
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCe-3jVqmFOr15FDzJw-r1XCLxe69unNjU",
-    authDomain: "intellitest-7d3a9.firebaseapp.com",
-    projectId: "intellitest-7d3a9",
-    storageBucket: "intellitest-7d3a9.appspot.com",
-    messagingSenderId: "710269923733",
-    appId: "1:710269923733:web:36bf1163ac78544137069c",
-    measurementId: "G-ZZ3Q7YCHXR"
+const config = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-firebase.initializeApp(firebaseConfig);
+// Next re-executes modules on hot reload, and initializeApp throws on a second call.
+const app = getApps()[0] ?? initializeApp(config);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
-export const googleSignOut = () => {
-    return auth.signOut();
-  };
+// Resolved on demand rather than at import time. getAuth validates the config,
+// which would otherwise fail the prerender pass on any machine without the env
+// vars set. Nothing signs in during SSR anyway.
+export function firebaseAuth() {
+    return getAuth(app);
+}
 
-export { auth, db, storage };
+export function googleSignIn() {
+    return signInWithPopup(firebaseAuth(), new GoogleAuthProvider());
+}
+
+export function googleSignOut() {
+    return signOut(firebaseAuth());
+}

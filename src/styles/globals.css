@@ -1,25 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html{
-    scroll-behavior: smooth;
-    font-family: 'Poppins', 'sans-serif';
+@theme {
+    --font-sans: 'Poppins', sans-serif;
+    --color-primary: #3C4CAD;
+    --color-primary-light: #E8A49C;
+    --color-primary-dark: #252B42;
 }
 
-
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-sans);
     min-height: 100vh;
     background: linear-gradient(to bottom left, #4B4D4F, #CE1141);
-    display: flex;
-    align-content: center !important;
-    justify-content: center;
 }
-
 
 .button-login {
     @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
@@ -30,7 +27,6 @@ body {
 }
 
 .grayed-out {
-    opacity: 0.5; /* Adjust the opacity to your desired level */
-    pointer-events: none; /* Disable pointer events on the element */
-  }
-  
+    opacity: 0.5;
+    pointer-events: none;
+}

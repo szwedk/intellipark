@@ -1,26 +1,19 @@
-// withAuth.js
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './firebase_setup/firebase';
+import useUser from './hooks/useUser';
 
-const withAuth = (Component) => {
-  const AuthenticatedComponent = (props) => {
-    const router = useRouter();
-    const [user, loading, error] = useAuthState(auth);
+export default function withAuth(Component) {
+    return function Guarded(props) {
+        const router = useRouter();
+        const { user, loading } = useUser();
 
-    if (loading) {
-      return <div>Loading...</div>;
-    }
+        useEffect(() => {
+            if (!loading && !user) router.replace('/login');
+        }, [loading, user, router]);
 
-    if (!user) {
-      router.replace('/Signin');
-      return null;
-    }
+        if (loading) return <p className="p-8">Loading…</p>;
+        if (!user) return null;
 
-    return <Component {...props} />;
-  };
-
-  return AuthenticatedComponent;
-};
-
-export default withAuth;
+        return <Component {...props} />;
+    };
+}
